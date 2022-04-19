@@ -219,4 +219,40 @@ describe("Login Router", () => {
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(new InvalidParamError("email"));
   });
+
+  test("Should return 500 if EmailValidator is not provided", async () => {
+    const authUseCaseSpy = makeAuthUseCase();
+
+    const sut = new LoginRouter(authUseCaseSpy);
+
+    const httpRequest = {
+      body: {
+        email: "test@test.com",
+        password: "123123",
+      },
+    };
+
+    const httpResponse = await sut.route(httpRequest);
+
+    expect(httpResponse.statusCode).toBe(500);
+    expect(httpResponse.body).toEqual(new ServerError());
+  });
+
+  test("Should return 500 if EmailValidator has no isValid method", async () => {
+    const authUseCaseSpy = makeAuthUseCase();
+
+    const sut = new LoginRouter(authUseCaseSpy, {});
+
+    const httpRequest = {
+      body: {
+        email: "test@test.com",
+        password: "123123",
+      },
+    };
+
+    const httpResponse = await sut.route(httpRequest);
+
+    expect(httpResponse.statusCode).toBe(500);
+    expect(httpResponse.body).toEqual(new ServerError());
+  });
 });
