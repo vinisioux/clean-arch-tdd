@@ -29,7 +29,6 @@ describe("Login Router", () => {
     const httpRequest = {
       body: {
         email: "test@test.com",
-        password: "123123",
       },
     };
 
