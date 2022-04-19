@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:staged": "jest",
     "test:watch": "jest --watchAll",
     "prepare": "husky install"
   },
@@ -19,6 +20,7 @@
   "lint-staged": {
     "*.{js,ts}": [
       "standard --fix",
+      "npm run test:staged",
       "git add"
     ]
   },
