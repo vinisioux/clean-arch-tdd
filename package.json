@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "test:staged": "jest --passWithNoTests",
-    "test:watch": "jest --watchAll",
+    "test:staged": "jest --passWithNoTests --findRelatedTests --silent",
+    "test:watch": "jest --watch --silent ",
     "prepare": "husky install"
   },
   "keywords": [],
