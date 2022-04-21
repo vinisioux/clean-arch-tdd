@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --colors --noStackTrace --passWithNoTests --runInBand",
+    "test": "jest --colors --noStackTrace --passWithNoTests --silent",
+    "test:unit": "npm test -- --watchAll",
     "test:staged": "npm test --findRelatedTests --silent",
     "test:watch": "jest --watch --silent ",
     "test:ci": "jest --coverage",
