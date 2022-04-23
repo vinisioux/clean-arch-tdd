@@ -5,9 +5,15 @@ class TokenGenerator {
   }
 }
 
+const makeSut = () => {
+  const sut = new TokenGenerator();
+
+  return { sut };
+};
+
 describe("Token Generator", () => {
   test("Should return null if jwt lib returns null", async () => {
-    const sut = new TokenGenerator();
+    const { sut } = makeSut();
     jwt.token = null;
     const token = await sut.generate("any_id");
 
@@ -15,7 +21,7 @@ describe("Token Generator", () => {
   });
 
   test("Should return a token if jwt lib returns token", async () => {
-    const sut = new TokenGenerator();
+    const { sut } = makeSut();
 
     const token = await sut.generate("any_id");
 
