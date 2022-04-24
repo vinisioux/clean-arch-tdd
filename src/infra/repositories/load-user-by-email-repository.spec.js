@@ -1,29 +1,21 @@
-require("dotenv/config");
-const { MongoClient } = require("mongodb");
+const MongoHelper = require("../helpers/mongo-helper");
 const {
   LoadUserByEmailRepository,
 } = require("./load-user-by-email-repository");
-
-let client, db;
+let db;
 
 const makeSut = () => {
   const userModel = db.collection("users");
   const sut = new LoadUserByEmailRepository(userModel);
-
   return {
-    sut,
     userModel,
+    sut,
   };
 };
 
 describe("LoadUserByEmail Repository", () => {
   beforeAll(async () => {
-    client = await MongoClient.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    db = await client.db();
+    db = await MongoHelper.connect(process.env.MONGO_URL);
   });
 
   beforeEach(async () => {
@@ -31,7 +23,7 @@ describe("LoadUserByEmail Repository", () => {
   });
 
   afterAll(async () => {
-    await client.close();
+    await MongoHelper.disconnect();
   });
 
   test("Should return null if user not found", async () => {
@@ -58,5 +50,13 @@ describe("LoadUserByEmail Repository", () => {
       _id: fakeUserData._id,
       password: fakeUserData.password,
     });
+  });
+
+  test("Should throws if no userModel is provided", async () => {
+    const sut = new LoadUserByEmailRepository();
+
+    expect(async () => {
+      await sut.load("any_email@email.com");
+    }).rejects.toThrow();
   });
 });
