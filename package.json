@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/main/index.js",
   "scripts": {
-    "dev": "node src/main/index.js",
+    "dev": "nodemon src/main/index.js",
     "test": "jest --colors --noStackTrace --passWithNoTests",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
@@ -30,6 +30,7 @@
     "husky": "^7.0.4",
     "jest": "^27.5.1",
     "lint-staged": "^12.3.8",
+    "nodemon": "^2.0.15",
     "standard": "^16.0.4"
   },
   "dependencies": {
