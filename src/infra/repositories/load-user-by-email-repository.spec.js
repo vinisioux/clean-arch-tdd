@@ -3,24 +3,23 @@ const { MissingParamError } = require("../../utils/errors/missing-param-error");
 const {
   LoadUserByEmailRepository,
 } = require("./load-user-by-email-repository");
-let db;
+let userModel;
 
 const makeSut = () => {
-  const userModel = db.collection("users");
-  const sut = new LoadUserByEmailRepository(userModel);
+  const sut = new LoadUserByEmailRepository();
   return {
-    userModel,
     sut,
   };
 };
 
 describe("LoadUserByEmail Repository", () => {
   beforeAll(async () => {
-    db = await MongoHelper.connect(process.env.MONGO_URL);
+    await MongoHelper.connect(process.env.MONGO_URL);
+    userModel = await MongoHelper.getCollection("users");
   });
 
   beforeEach(async () => {
-    await db.collection("users").deleteMany();
+    await userModel.deleteMany();
   });
 
   afterAll(async () => {
@@ -35,7 +34,7 @@ describe("LoadUserByEmail Repository", () => {
   });
 
   test("Should return an user if user is found", async () => {
-    const { sut, userModel } = makeSut();
+    const { sut } = makeSut();
 
     const fakeUserData = {
       email: "valid_email@email.com",
@@ -51,14 +50,6 @@ describe("LoadUserByEmail Repository", () => {
       _id: fakeUserData._id,
       password: fakeUserData.password,
     });
-  });
-
-  test("Should throws if no userModel is provided", async () => {
-    const sut = new LoadUserByEmailRepository();
-
-    expect(async () => {
-      await sut.load("any_email@email.com");
-    }).rejects.toThrow();
   });
 
   test("Should throws if no email is provided", async () => {

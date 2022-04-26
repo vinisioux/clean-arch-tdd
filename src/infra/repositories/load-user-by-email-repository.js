@@ -1,15 +1,14 @@
+const env = require("../../main/config/env");
 const { MissingParamError } = require("../../utils/errors/missing-param-error");
-
+const MongoHelper = require("../helpers/mongo-helper");
 class LoadUserByEmailRepository {
-  constructor(userModel) {
-    this.userModel = userModel;
-  }
   async load(email) {
     if (!email) {
       throw new MissingParamError("email");
     }
 
-    const user = this.userModel.findOne(
+    const userModel = await MongoHelper.getCollection("users");
+    const user = await userModel.findOne(
       {
         email,
       },

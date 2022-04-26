@@ -4,27 +4,25 @@ const {
   UpdateAccessTokenRepository,
 } = require("./update-access-token-repository");
 
-let db;
+let userModel;
 
 const makeSut = () => {
-  const userModel = db.collection("users");
-  const sut = new UpdateAccessTokenRepository(userModel);
+  const sut = new UpdateAccessTokenRepository();
 
   return {
     sut,
-    userModel,
   };
 };
 
 describe("UpdateAccessTokenRepository", () => {
   let fakeUserId;
   beforeAll(async () => {
-    db = await MongoHelper.connect(process.env.MONGO_URL);
+    await MongoHelper.connect(process.env.MONGO_URL);
+    userModel = await MongoHelper.getCollection("users");
   });
 
   beforeEach(async () => {
-    const userModel = db.collection("users");
-    await db.collection("users").deleteMany();
+    await userModel.deleteMany();
     const fakeUserData = {
       email: "valid_email@email.com",
       name: "any_name",
@@ -40,21 +38,13 @@ describe("UpdateAccessTokenRepository", () => {
   });
 
   test("Should updated the user with the given accessToken", async () => {
-    const { sut, userModel } = makeSut();
+    const { sut } = makeSut();
 
     await sut.update(fakeUserId, "valid_token");
 
     const updatedFakeUser = await userModel.findOne({ _id: fakeUserId });
 
     expect(updatedFakeUser.accessToken).toBe("valid_token");
-  });
-
-  test("Should throws if no userModel is provided", async () => {
-    const sut = new UpdateAccessTokenRepository();
-
-    expect(async () => {
-      await sut.update(fakeUserId, "valid_token");
-    }).rejects.toThrow();
   });
 
   test("Should throws if no params are provided", async () => {

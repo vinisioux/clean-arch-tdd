@@ -8,10 +8,17 @@ module.exports = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    return (this.db = this.client.db(dbName));
+    this.db = this.client.db(dbName);
+    // return (this.db = this.client.db(dbName));
   },
 
   async disconnect() {
     await this.client.close();
+    this.client = null;
+    this.db = null;
+  },
+
+  async getCollection(name) {
+    return this.db.collection(name);
   },
 };
