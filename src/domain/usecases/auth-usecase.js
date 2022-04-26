@@ -35,9 +35,9 @@ class AuthUseCase {
       user && (await this.encrypter.compare(password, user.password));
 
     if (isValid) {
-      const acecssToken = await this.tokenGenerator.generate(user.id);
+      const acecssToken = await this.tokenGenerator.generate(user._id);
 
-      await this.updateAccessTokenRepository.update(user.id, acecssToken);
+      await this.updateAccessTokenRepository.update(user._id, acecssToken);
 
       return acecssToken;
     }
