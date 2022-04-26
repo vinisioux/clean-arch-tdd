@@ -12,6 +12,4 @@ class ExpressRouterAdapter {
   }
 }
 
-module.exports = {
-  ExpressRouterAdapter,
-};
+module.exports = ExpressRouterAdapter;
